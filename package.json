@@ -1,7 +1,7 @@
 {
-  "name": "registration-backend",
+  "name": "student-portal-backend",
   "version": "1.0.0",
-  "description": "Registration form backend with Node.js, Express, and MongoDB",
+  "description": "Student Portal backend API with Node.js, Express, and MongoDB",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
