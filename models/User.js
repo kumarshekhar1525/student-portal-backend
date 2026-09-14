@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema(
             required: [true, 'Father name mandatory hai'],
             trim: true
         },
+        motherName: {
+            type: String,
+            required: [true, 'Mother name mandatory hai'],
+            trim: true
+        },
         rollNo: {
             type: String,
             required: [true, 'Roll No mandatory hai'],

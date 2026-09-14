@@ -505,6 +505,14 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="motherName">Mother's Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="motherName" class="form-control" placeholder="e.g. Anita Sharma" required>
+                            <i class="fa-solid fa-person-breastfeeding"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="rollNo">Roll Number</label>
                         <div class="input-wrapper">
                             <input type="text" id="rollNo" class="form-control" placeholder="e.g. CS2026-001" required>
@@ -563,6 +571,7 @@
                             <tr>
                                 <th>Student</th>
                                 <th>Father's Name</th>
+                                <th>Mother's Name</th>
                                 <th>Roll No</th>
                                 <th>Contact</th>
                                 <th>Address</th>
@@ -571,7 +580,7 @@
                         </thead>
                         <tbody id="studentTableBody">
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     <div class="empty-state">
                                         <div class="spinner" style="margin: 0 auto 10px;"></div>
                                         Loading student data...
@@ -663,6 +672,9 @@
                         <span style="font-weight: 500;">${escapeHtml(student.fatherName || '-')}</span>
                     </td>
                     <td>
+                        <span style="font-weight: 500;">${escapeHtml(student.motherName || '-')}</span>
+                    </td>
+                    <td>
                         <span class="roll-badge">${escapeHtml(student.rollNo)}</span>
                     </td>
                     <td>
@@ -683,7 +695,7 @@
         function renderEmpty(message) {
             studentTableBody.innerHTML = `
                 <tr>
-                    <td colspan="6">
+                    <td colspan="7">
                         <div class="empty-state">
                             <i class="fa-regular fa-folder-open"></i>
                             <p>${message}</p>
@@ -707,6 +719,7 @@
             const data = {
                 name: document.getElementById('name').value.trim(),
                 fatherName: document.getElementById('fatherName').value.trim(),
+                motherName: document.getElementById('motherName').value.trim(),
                 rollNo: document.getElementById('rollNo').value.trim(),
                 phoneNo: document.getElementById('phoneNo').value.trim(),
                 address: document.getElementById('address').value.trim()
@@ -766,6 +779,7 @@
             const filtered = allStudents.filter(student => 
                 (student.name && student.name.toLowerCase().includes(query)) ||
                 (student.fatherName && student.fatherName.toLowerCase().includes(query)) ||
+                (student.motherName && student.motherName.toLowerCase().includes(query)) ||
                 (student.rollNo && student.rollNo.toLowerCase().includes(query)) ||
                 (student.phoneNo && student.phoneNo.toLowerCase().includes(query)) ||
                 (student.address && student.address.toLowerCase().includes(query))

@@ -6,20 +6,21 @@ const User = require('../models/User');
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        let { name, fatherName, rollNo, address, phoneNo } = req.body;
+        let { name, fatherName, motherName, rollNo, address, phoneNo } = req.body;
 
         // Clean and trim string inputs
         name = typeof name === 'string' ? name.trim() : '';
         fatherName = typeof fatherName === 'string' ? fatherName.trim() : '';
+        motherName = typeof motherName === 'string' ? motherName.trim() : '';
         rollNo = typeof rollNo === 'string' ? rollNo.trim().toUpperCase() : '';
         address = typeof address === 'string' ? address.trim() : '';
         phoneNo = typeof phoneNo === 'string' ? phoneNo.trim() : '';
 
         // Validation - Check if all mandatory fields are provided
-        if (!name || !fatherName || !rollNo || !address || !phoneNo) {
+        if (!name || !fatherName || !motherName || !rollNo || !address || !phoneNo) {
             return res.status(400).json({
                 success: false,
-                message: 'Kripya sabhi fields (name, fatherName, rollNo, address, phoneNo) bharein.'
+                message: 'Kripya sabhi fields (name, fatherName, motherName, rollNo, address, phoneNo) bharein.'
             });
         }
 
@@ -36,6 +37,7 @@ const registerUser = async (req, res) => {
         const newUser = await User.create({
             name,
             fatherName,
+            motherName,
             rollNo,
             address,
             phoneNo
