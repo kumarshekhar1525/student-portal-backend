@@ -15,7 +15,9 @@ const connectDB = async () => {
     } catch (error) {
         console.error(`❌ MongoDB Connection Error: ${error.message}`);
         console.error(`👉 IP Whitelist Check: MongoDB Atlas me "Network Access" -> "Add IP Address" -> "Allow Access from Anywhere (0.0.0.0/0)" add karein.`);
+        throw error;
     }
+
 };
 
 module.exports = connectDB;

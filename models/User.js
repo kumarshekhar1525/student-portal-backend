@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
     {
@@ -7,31 +8,43 @@ const userSchema = new mongoose.Schema(
             required: [true, 'Name mandatory hai'],
             trim: true
         },
+        email: {
+            type: String,
+            required: [true, 'Email mandatory hai'],
+            unique: true,
+            lowercase: true,
+            trim: true
+        },
+        password: {
+            type: String,
+            required: [true, 'Password mandatory hai'],
+            minlength: 6,
+            select: false
+        },
+        role: {
+            type: String,
+            enum: ['student', 'admin', 'staff'],
+            default: 'student'
+        },
+        rollNo: {
+            type: String,
+            trim: true,
+            uppercase: true
+        },
         fatherName: {
             type: String,
-            required: [true, 'Father name mandatory hai'],
             trim: true
         },
         motherName: {
             type: String,
-            required: [true, 'Mother name mandatory hai'],
             trim: true
-        },
-        rollNo: {
-            type: String,
-            required: [true, 'Roll No mandatory hai'],
-            unique: true,
-            trim: true,
-            uppercase: true
         },
         address: {
             type: String,
-            required: [true, 'Address mandatory hai'],
             trim: true
         },
         phoneNo: {
             type: String,
-            required: [true, 'Phone number mandatory hai'],
             trim: true
         }
     },
@@ -39,5 +52,20 @@ const userSchema = new mongoose.Schema(
         timestamps: true
     }
 );
+
+// Password hashing before saving
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+});
+
+// Match entered password with hashed password
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
 
 module.exports = mongoose.model('User', userSchema);

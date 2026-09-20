@@ -1,25 +1,39 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const connectDB = require('./config/db');
+
+// Route imports
+const authRoutes = require('./routes/authRoutes');
+const complaintRoutes = require('./routes/complaintRoutes');
+const itemRoutes = require('./routes/itemRoutes');
 const userRoutes = require('./routes/userRoutes');
 
-// Environment variables load karna
+// Error Middleware import
+const errorHandler = require('./middleware/errorMiddleware');
+
+// Environment variables configuration
 dotenv.config();
 
-// Database connect karna
+// Connect Database
 connectDB();
 
 const app = express();
 
-// Middlewares
+// Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Serve static frontend form from public folder
-app.use(express.static('public'));
+// Serve static uploaded files & frontend files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes setup
+// Mount API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/complaints', complaintRoutes);
+app.use('/api/items', itemRoutes);
 app.use('/api/users', userRoutes);
 
 // 404 Handler for unknown API routes
@@ -31,13 +45,7 @@ app.use('/api/*', (req, res) => {
 });
 
 // Centralized Error Handling Middleware
-app.use((err, req, res, next) => {
-    console.error('Unhandled Error:', err.stack);
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal Server Error'
-    });
-});
+app.use(errorHandler);
 
 // Function to handle automatic port fallback if port is already in use
 const startServer = (port) => {
@@ -49,7 +57,7 @@ const startServer = (port) => {
 
     server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
-            console.log(`Port ${port} busy hai, port ${port + 1} par try kar rahe hain...`);
+            console.log(`Port ${port} busy, trying port ${port + 1}...`);
             startServer(port + 1);
         } else {
             console.error('Server error:', err);
